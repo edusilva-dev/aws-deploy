@@ -3,13 +3,13 @@ import { z } from "zod";
 const users = [];
 
 export default async function userRoutes(server) {
-  server.post("/users", (request, reply) => {
+  server.post("/users", async (request, reply) => {
     const createUserBodySchema = z.object({
       email: z.string().email(),
       password: z.string(),
     });
 
-    const { data, error } = createUserBodySchema.safeParse(request.body);
+    const { data, error } = await createUserBodySchema.safeParse(request.body);
 
     if (error) {
       return reply.status(400).send(data);
@@ -22,7 +22,7 @@ export default async function userRoutes(server) {
     });
   });
 
-  server.get("/users", (_, reply) => {
+  server.get("/users", async (_, reply) => {
     return reply.status(200).send({ users });
   });
 }
